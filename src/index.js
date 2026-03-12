@@ -1,8 +1,14 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const connectDB = require('./config/db'); // 1. Import the connection function
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+// 2. Call the connection function to establish a connection
+connectDB();
+
 
 // Import middleware from central file
 const { errorHandler, requestLogger } = require('./middleware');
@@ -19,9 +25,8 @@ app.use('/api/v1', mainRouter);
 // Error handler LAST
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { body } = require('express-validator');
+const { body } = require("express-validator");
 
 // import controller
 const postController = require("../controllers/posts.controller");
@@ -11,9 +11,17 @@ const createPostRules = [
 	body('content').notEmpty().withMessage('Content is required')
 ];
 
-// use controller instead of inline logic
+// Routes
 router.get("/", postController.getAllPosts);
+
 router.get("/:postId", postController.getPostById);
+
 router.post("/", createPostRules, postController.createPost);
+
+// UPDATE POST
+router.patch("/:postId", postController.updatePost);
+
+// DELETE POST
+router.delete("/:postId", postController.deletePost);
 
 module.exports = router;
