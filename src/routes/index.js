@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 // Import resource-specific routers
+const usersRouter = require('./users.routes.js');
 const postRouter = require('./posts.routes.js');
 
 // Mount routers
+router.use('/users', usersRouter);
 router.use('/posts', postRouter);
 
 module.exports = router;
