@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: blogify-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: blogify
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/admin -u root -p password123 --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - blogify-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blogify-api
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: mongodb
+      DB_PORT: 27017
+      DB_NAME: blogify
+      DB_USERNAME: root
+      DB_PASSWORD: password123
+      MONGODB_URI: mongodb://root:password123@mongodb:27017/blogify?authSource=admin
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - blogify-network
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+
+networks:
+  blogify-network:
+    driver: bridge

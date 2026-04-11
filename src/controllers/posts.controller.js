@@ -42,9 +42,31 @@ const createPost = (req, res) => {
   });
 };
 
+const updatePost = (req, res) => {
+  const { postId } = req.params;
+
+  res.status(200).json({
+    success: true,
+    data: {
+      message: `Post ${postId} updated (mock)`
+    }
+  });
+};
+
+const deletePost = (req, res) => {
+  const { postId } = req.params;
+
+  res.status(200).json({
+    success: true,
+    message: `Post ${postId} deleted (mock)`
+  });
+};
+
 
 module.exports = {
   getAllPosts,
   getPostById,
   createPost,
+  updatePost,
+  deletePost
 };
